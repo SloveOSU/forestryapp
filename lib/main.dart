@@ -9,6 +9,7 @@ import "forestryapp.dart";
 import 'package:forestryapp/database/database_manager.dart';
 
 // Winter 2025 commits begin
+// creating new branch feature-gallery
 
 void main() async {
   // Need `ensureInitialized()` when main is `async` because the we are waiting
