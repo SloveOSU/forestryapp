@@ -34,6 +34,11 @@ dependencies:
   # Use shared_preferences for storing settings like Evaluator contact info and
   # font size.
   shared_preferences: ^2.2.2
+  # Use for onboard camera and gallery filesystem works with android and iOS
+  # Made use of in /lib/screens/photos_files_form.dart
+  camera: ^0.11.1
+  gal: ^2.3.1  
+  image_picker: ^1.1.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -66,7 +71,8 @@ dev_dependencies:
 
 dependency_overrides:
   # From https://github.com/PavelS0/docx_template_dart/issues/53#issuecomment-1883585705
-  archive: 3.4.9
+  archive: ^3.6.1
+  win32: ^5.5.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
