@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import "forestryapp.dart";
 import 'package:forestryapp/database/database_manager.dart';
 
+// Winter 2025 commits begin
+
 void main() async {
   // Need `ensureInitialized()` when main is `async` because the we are waiting
   // for shared preferences to be initialized before calling `runApp()`.
