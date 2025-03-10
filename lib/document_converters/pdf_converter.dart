@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:forestryapp/models/area.dart";
 import "package:forestryapp/models/landowner.dart";
 import 'package:forestryapp/models/settings.dart';
@@ -6,7 +8,9 @@ import "package:pdf/widgets.dart" as pw;
 
 /// Class to manage creating a PDF version of the checklist.
 class PdfConverter {
+
   pw.Document create(Area area, Landowner landowner, Settings evaluator,) {
+    
     final pdf = pw.Document(
       theme: pw.ThemeData(
         defaultTextStyle: const pw.TextStyle(
@@ -18,20 +22,32 @@ class PdfConverter {
       ),
     );
 
+
+
+
+
     pdf.addPage(pw.MultiPage(
-      pageFormat: PdfPageFormat.a4,
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      header: (context) => _buildHeader0(context),
-      build: (pw.Context context) {
+      pageFormat          : PdfPageFormat.a4                        ,
+      crossAxisAlignment  : pw.CrossAxisAlignment.start             ,
+      header              : (context) => _buildHeader0(context)     ,
+      build               : (pw.Context context) {
         return [
           // Basic information
-          _buildKeyValue(context, "Landowner name", landowner.name),
-          _buildKeyValue(context, "Address", landowner.address),
-          _buildKeyValue(context, "Email", landowner.email),
-          _buildKeyValue(context, "Stand/Area Name", area.name),
-          _buildKeyValue(context, "Acres", area.acres.toString()),
-          _buildHeader1(context, "Landowner goals and objectives:"),
-          _buildParagraph(context, area.goals),
+          _buildKeyValue(context, "Landowner name"        , landowner.name            ),
+          _buildKeyValue(context, "Address"               , landowner.address         ),
+          _buildKeyValue(context, "Email"                 , landowner.email           ),
+          _buildKeyValue(context, "Stand/Area Name"       , area.name                 ),
+          _buildKeyValue(context, "Acres"                 , area.acres.toString()     ),      
+          _buildHeader1 (context, "Landowner goals and objectives:"                   ), 
+          _buildParagraph(context, area.goals                                         ),
+
+
+          // Photos and Files
+          _buildKeyValue(context, "Photo name"                 , area.photoName                 ),
+          _buildKeyValue(context, "Photo Path"                 , area.photoFilePath             ),  // photo path
+          _buildDisplayPhoto(context, area.photoFilePath                                        ),  // display photo
+          _buildKeyValue(context, "Photo Description"          , area.photoDescription          ),
+
 
           // Site Characteristics
           _buildHeader1(context, "Site Characteristics"),
@@ -208,20 +224,21 @@ class PdfConverter {
     return pdf;
   }
 
+
   /// Display the main heading
   pw.Widget _buildHeader0(pw.Context context) {
     return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.center,
-      children: [
+      mainAxisAlignment : pw.MainAxisAlignment.center,
+      children          : [
         pw.Padding(
-          padding: const pw.EdgeInsets.symmetric(vertical: 13.0),
-          child: pw.Text(
-            "Forest Wellness Checkup", 
-            textAlign: pw.TextAlign.center,
-            style: pw.TextStyle(
-              fontSize: 13.0,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColor.fromHex("#808080"),
+          padding   : const pw.EdgeInsets.symmetric(vertical: 13.0),
+          child     : pw.Text(
+            "Forest Wellness Checkup"             , 
+            textAlign : pw.TextAlign.center       ,
+            style     : pw.TextStyle(
+              fontSize    : 13.0                          ,
+              fontWeight  : pw.FontWeight.bold            ,
+              color       : PdfColor.fromHex("#808080")   ,
             )
           ),
         )
@@ -229,15 +246,20 @@ class PdfConverter {
     );
   }
 
+
+
+
+
+
   /// Display a first-level heading
   pw.Widget _buildHeader1(pw.Context context, String text) {
     return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 11),
-      child: pw.Text(
+      padding : const pw.EdgeInsets.symmetric(vertical: 11),
+      child   : pw.Text(
         text,
         style: pw.TextStyle(
-          fontSize: 11.0,
-          fontWeight: pw.FontWeight.bold,
+          fontSize    : 11.0                ,
+          fontWeight  : pw.FontWeight.bold  ,
         )
       )
     );
@@ -246,8 +268,8 @@ class PdfConverter {
   /// Display a second level heading
   pw.Widget _buildHeader2(pw.Context context, String text) {
     return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 10),
-      child: pw.Text(
+      padding : const pw.EdgeInsets.symmetric(vertical: 10),
+      child   : pw.Text(
         text,
         style: pw.TextStyle(
           fontWeight: pw.FontWeight.bold,
@@ -277,8 +299,8 @@ class PdfConverter {
             pw.TextSpan(
               text: value,
               style: pw.TextStyle(
-                fontWeight: pw.FontWeight.normal,
-                fontStyle: () { 
+                fontWeight  : pw.FontWeight.normal,
+                fontStyle   : () { 
                   // Optionally allow italic value text
                   if (isItalic) {
                     return pw.FontStyle.italic;
@@ -293,6 +315,36 @@ class PdfConverter {
       )
     );
   }
+
+  
+  /// Display area photo
+  pw.Widget _buildDisplayPhoto(pw.Context context, photoFilePath) {
+    
+      // run the parameter through a regular expression to unwrap its casting as a file
+      // the File type include a preface of "File: '...'" before the path string
+      // the below RE takes the path string that is inside the single quotes
+      RegExp regExp = RegExp("'([^']*)'");      
+      var match = regExp.firstMatch(photoFilePath);      
+      if (match != null) 
+      {      
+        photoFilePath = match.group(1);
+      } 
+      else 
+      {
+        photoFilePath = "No photo selected for this Area";
+      }      
+
+
+    final image = pw.MemoryImage(
+      File(photoFilePath).readAsBytesSync(),
+    );
+    
+    return pw.Padding(
+      padding: const pw.EdgeInsets.only(bottom: 10),
+      child: pw.Image(image),
+    );
+  }
+
 
   /// Display a paragraph of text.
   pw.Widget _buildParagraph(pw.Context context, text) {

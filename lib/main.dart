@@ -14,6 +14,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 // creating new branch feature-gallery
 // commit #1 - added changes to gradle, kotlin, and pubspec
 // commit #2 - adding screen
+// commit #3 - PDF export feature
 
 void main() async {
   // Need `ensureInitialized()` when main is `async` because the we are waiting
