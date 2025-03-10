@@ -5,6 +5,14 @@ INSERT INTO areas(
   acres,
   goals,
 
+
+  -- save_new_area.sql
+  -- Photos and Files
+  photo_name            ,
+  photo_description     ,
+  photo_file_path       ,
+
+
   -- Site Characteristics
   elevation,
   aspect,
@@ -46,6 +54,14 @@ INSERT INTO areas(
    ?,
    ?,
    ?,
+
+
+   -- Photos and Files
+   ?,
+   ?,
+   ?,
+
+
    -- Site Characteristics
    ?,
    ?,

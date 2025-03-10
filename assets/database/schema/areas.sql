@@ -14,6 +14,12 @@ CREATE TABLE if NOT EXISTS areas(
 
   goals TEXT,
 
+  -- areas.sql
+  photo_name          TEXT,
+  photo_description   TEXT,  
+  photo_file_path     TEXT,
+
+
   -- Elevation is measured in feet.
   elevation INTEGER,
 

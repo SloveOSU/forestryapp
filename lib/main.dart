@@ -15,6 +15,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 // commit #1 - added changes to gradle, kotlin, and pubspec
 // commit #2 - adding screen
 // commit #3 - PDF export feature
+// commit #4 - updated SQL files for database persistence
 
 void main() async {
   // Need `ensureInitialized()` when main is `async` because the we are waiting
@@ -26,6 +27,8 @@ void main() async {
 
   // modify this variable to reinstantiate the flutter database
   // this is needed if the DDL or DML is altered in a structural way
+  // set the variable to false if you want to keep the database structure
+  // set the variable to true if you want to update the database structure
   // run twice after delete
   bool reinstatiateDatabase = false;
   // ignore: dead_code

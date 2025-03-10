@@ -2,9 +2,18 @@ UPDATE areas
    SET
   -- Basic Information
      landowner_id = ?,
-     name = ?,
-     acres = ?,
-     goals = ?,
+     name         = ?,
+     acres        = ?,
+     goals        = ?,
+
+
+  -- update_existing_area.sql
+  -- Photos and files
+     photo_name            = ?,
+     photo_description     = ?,
+     photo_file_path       = ?,
+
+
 
   -- Site Characteristics
      elevation = ?,

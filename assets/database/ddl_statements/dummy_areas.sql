@@ -3,6 +3,12 @@ INSERT INTO areas(
   name,
   acres,
   goals,
+
+  -- Photos and files screen
+  photo_name           ,
+  photo_description    ,
+  photo_file_path      ,  
+
   elevation,
   aspect,
   slope_percentage,
@@ -36,9 +42,21 @@ VALUES
     -- name
     'Area A1',
     -- acres
-    10,
+    999,
     -- goals
     'Fusce commodo.  Nullam libero mauris, consequat quis, varius et, dictum id, arcu.',
+
+
+
+    -- photo_name
+    'photo name test var'         ,
+    -- photo_description
+    'photo descriptiontest var'   ,    
+    -- photo_file_path
+    'C:/mobile/localstorage'      ,
+
+
+
     -- elevation
     10,
     -- aspect
@@ -99,6 +117,16 @@ VALUES
     20,
     -- goals
     'Fusce commodo.  Nullam libero mauris, consequat quis, varius et, dictum id, arcu.',
+
+
+    -- photo_name
+    'photo name test var'         ,
+    -- photo_description
+    'photo descriptiontest var'   ,    
+    -- photo_file_path
+    'C:/mobile/localstorage'      ,
+
+
     -- elevation
     -20,
     -- aspect
@@ -159,6 +187,16 @@ VALUES
     30,
     -- goals
     'Fusce commodo.  Nullam libero mauris, consequat quis, varius et, dictum id, arcu.',
+
+
+    -- photo_name
+    'photo name test var'         ,
+    -- photo_description
+    'photo descriptiontest var'   ,    
+    -- photo_file_path
+    'C:/mobile/localstorage'      ,
+
+
     -- elevation
     30,
     -- aspect
@@ -219,6 +257,16 @@ VALUES
     40,
     -- goals
     'Fusce commodo.  Nullam libero mauris, consequat quis, varius et, dictum id, arcu.',
+
+
+    -- photo_name
+    'photo name test var'         ,
+    -- photo_description
+    'photo descriptiontest var'   ,    
+    -- photo_file_path
+    'C:/mobile/localstorage'      ,
+
+
     -- elevation
     40,
     -- aspect
@@ -279,6 +327,16 @@ VALUES
     100,
     -- goals
     'Fusce commodo.  Nullam libero mauris, consequat quis, varius et, dictum id, arcu.',
+
+
+    -- photo_name
+    'photo name test var'         ,
+    -- photo_description
+    'photo descriptiontest var'   ,    
+    -- photo_file_path
+    'C:/mobile/localstorage'      ,
+
+
     -- elevation
     100,
     -- aspect
@@ -339,6 +397,16 @@ VALUES
     200,
     -- goals
     'Fusce commodo.  Nullam libero mauris, consequat quis, varius et, dictum id, arcu.',
+
+
+    -- photo_name
+    'photo name test var'         ,
+    -- photo_description
+    'photo descriptiontest var'   ,    
+    -- photo_file_path
+    'C:/mobile/localstorage'      ,
+
+
     -- elevation
     200,
     -- aspect
@@ -399,6 +467,16 @@ VALUES
     300,
     -- goals
     'Fusce commodo.  Nullam libero mauris, consequat quis, varius et, dictum id, arcu.',
+
+
+    -- photo_name
+    'photo name test var'         ,
+    -- photo_description
+    'photo descriptiontest var'   ,    
+    -- photo_file_path
+    'C:/mobile/localstorage'      ,
+
+
     -- elevation
     300,
     -- aspect
