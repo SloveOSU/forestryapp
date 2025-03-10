@@ -1,5 +1,8 @@
+// material library
 import 'package:flutter/material.dart';
+// models
 import 'package:forestryapp/models/settings.dart';
+// screens
 import 'package:forestryapp/screens/area_index.dart';
 import 'package:forestryapp/screens/basic_information_form.dart';
 import 'package:forestryapp/screens/form_review.dart';
@@ -8,6 +11,7 @@ import 'package:forestryapp/screens/invasive_form.dart';
 import 'package:forestryapp/screens/landowner_index.dart';
 import 'package:forestryapp/screens/mistletoe_form.dart';
 import 'package:forestryapp/screens/insects_form.dart';
+import 'package:forestryapp/screens/photos_files_form.dart';
 import 'package:forestryapp/screens/settings_review.dart';
 import 'package:forestryapp/screens/site_characteristics_form.dart';
 import 'package:forestryapp/screens/vegetative_conditions_form.dart';
@@ -15,8 +19,10 @@ import 'package:forestryapp/screens/road_health_form.dart';
 import 'package:forestryapp/screens/water_issues_form.dart';
 import 'package:forestryapp/screens/fire_risk_form.dart';
 import 'package:forestryapp/screens/other_issues_form.dart';
-import 'package:forestryapp/components/unsaved_changes.dart';
 import 'package:forestryapp/screens/diagnosis_form.dart';
+// components
+import 'package:forestryapp/components/unsaved_changes.dart';
+// state
 import 'package:provider/provider.dart';
 
 /// A component to ensure common high level layout across screens of the app.
@@ -25,10 +31,10 @@ import 'package:provider/provider.dart';
 /// navigation as well as common layout choices like padding.
 class ForestryScaffold extends StatelessWidget {
   // Instance variables ////////////////////////////////////////////////////////
-  final String _title;
-  final Widget _body;
-  final Widget? _fab;
-  final bool _showFormLinks;
+  final String  _title        ;
+  final Widget  _body         ;
+  final Widget? _fab          ;
+  final bool    _showFormLinks;
 
   // Constructor ///////////////////////////////////////////////////////////////
   /// Creates Material design scaffold with provided [title] and [body].
@@ -36,31 +42,64 @@ class ForestryScaffold extends StatelessWidget {
   /// Can optionally provide a Floating Action Button to shower in lower right
   /// corner. If not specified, no FAB will be shown.
   const ForestryScaffold({
-    required String title,
-    required Widget body,
-    Widget? fab,
-    bool showFormLinks = false,
+    required  String    title                   ,
+    required  Widget    body                    ,
+              Widget?   fab                     ,
+              bool      showFormLinks = false   ,
     super.key,
-  })  : _title = title,
-        _body = body,
-        _fab = fab,
-        _showFormLinks = showFormLinks;
+  })  : _title          = title                 ,
+        _body           = body                  ,
+        _fab            = fab                   ,
+        _showFormLinks  = showFormLinks         ;
+
+
 
   // Methods ///////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
+    
+    // builds app bar template
     return Scaffold(
-      appBar: AppBar(title: Text(_title), centerTitle: true),
-      body: Padding(padding: const EdgeInsets.all(30), child: _body),
-      drawer: Drawer(child: ListView(children: _buildDrawerItems(context))),
+      appBar  : AppBar(
+        title       : Text(_title),
+        centerTitle : true
+      ),
+      body    : Padding(
+        padding     : const EdgeInsets.all(30),
+        child       : _body
+      ),
+      drawer  : Drawer(
+        child       : ListView(children : _buildDrawerItems(context))
+      ),
       floatingActionButton: _fab ?? Container(),
     );
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
   List<Widget> _buildDrawerItems(BuildContext context) {
-    final unsavedChangesNotifier = Provider.of<UnsavedChangesNotifier>(context,
-        listen: false); // Access the UnsavedChangesNotifier
+
+    // use provider created in forestryapp()
+    final unsavedChangesNotifier = Provider.of<UnsavedChangesNotifier>(
+          context,
+          listen: false
+        ); // Access the UnsavedChangesNotifier
+
+    //
+    //  Core list of links to be included into menu selection
+    //
     List<Widget> mainLinks = [
+
         ListTile(
         title: const Text('Home'),
         leading: const Icon(Icons.home),
@@ -102,9 +141,18 @@ class ForestryScaffold extends StatelessWidget {
         },
       ),
     ];
+
+
+    //
+    // Secondary area links - not available until basic information filled out
+    // 
     // Links to the Area form input screens
     List<Widget> areaFormLinks = [
       const Divider(),
+
+
+
+
       ListTile(
         title: const Text('Basic Information'),
         leading: const Icon(Icons.badge),
@@ -115,6 +163,26 @@ class ForestryScaffold extends StatelessWidget {
           );
         },
       ),
+
+
+      ///////////////////////////////////////////////////
+      //
+      //  New Tile - Photos and Files
+      //
+      ///////////////////////////////////////////////////
+      ListTile(
+        title: const Text('Photos and Files'),
+        leading: const Icon(Icons.camera),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PhotosFilesForm()),
+          );
+        },
+      ),
+      ///////////////////////////////////////////////////
+
+
       ListTile(
         title: const Text('Site Characteristics'),
         leading: const Icon(Icons.place),
@@ -224,6 +292,11 @@ class ForestryScaffold extends StatelessWidget {
         },
       ),
     ];
+
+
+    //
+    //  "Hamburger" menu controller
+    //
     // Form links only appear when you are editing or creating an Area
     if (_showFormLinks) {
       mainLinks.addAll(areaFormLinks);
@@ -232,22 +305,32 @@ class ForestryScaffold extends StatelessWidget {
     return mainLinks;
   }
 
+
+
+
+
+
+
   void _navigateWithUnsavedChanges(BuildContext context,
-      UnsavedChangesNotifier unsavedChangesNotifier, Widget destination) {
+      UnsavedChangesNotifier unsavedChangesNotifier,
+      Widget destination) {
     if (unsavedChangesNotifier.unsavedChanges) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Unsaved Changes'),
-          content: const Text(
-              'Are you sure you want to leave? Any unsaved changes will be lost.'),
-          actions: [
+          title   : const Text('Unsaved Changes'),
+          content : const Text('Are you sure you want to leave? Any unsaved changes will be lost.'),
+          actions : [
+
+
             TextButton(
-              onPressed: () {
+              onPressed : () {
                 Navigator.pop(context); // Dismiss the dialog
               },
-              child: const Text('Cancel'),
+              child     : const Text('Cancel'),
             ),
+
+
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Dismiss the dialog
@@ -258,12 +341,19 @@ class ForestryScaffold extends StatelessWidget {
               },
               child: const Text('Leave'),
             ),
+
+
+
           ],
         ),
       );
     } else {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => destination));
+          context, 
+          MaterialPageRoute(
+            builder: (context) => destination
+          )
+      );
     }
   }
 }

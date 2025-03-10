@@ -7,6 +7,7 @@ import "package:forestryapp/components/radio_options.dart";
 import "package:forestryapp/enums/slope_position.dart";
 import "package:forestryapp/enums/direction.dart";
 import "package:forestryapp/screens/basic_information_form.dart";
+import "package:forestryapp/screens/photos_files_form.dart";
 import "package:forestryapp/screens/vegetative_conditions_form.dart";
 import "package:forestryapp/util/validation.dart";
 import 'package:provider/provider.dart';
@@ -23,22 +24,26 @@ class SiteCharacteristicsForm extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
 
+
   // Constructor ////////////////////////////////////////////////////////////////
   /// Creates a screen for capturing site characteristics.
   SiteCharacteristicsForm({super.key});
+
 
   // Methods ///////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
     return ForestryScaffold(
-        showFormLinks: true,
-        title: SiteCharacteristicsForm._title,
-        body: FormScaffold(
-            prevPage: BasicInformationForm(),
-            nextPage: VegetativeConditionsForm(),
-            child: Form(
-              key: _formKey,
-              child: Wrap(
+        showFormLinks : true,
+        title         : SiteCharacteristicsForm._title,
+        
+        body          : FormScaffold(          
+          prevPage      : PhotosFilesForm(),                  
+          nextPage      : VegetativeConditionsForm(),
+
+          child         : Form(              
+              key         : _formKey,
+              child       : Wrap(
                 children: [
                   _buildAspect(context),
                   _buildElevation(context),
@@ -50,7 +55,42 @@ class SiteCharacteristicsForm extends StatelessWidget {
             )));
   }
 
+
   // Inputs ////////////////////////////////////////////////////////////////////
+
+
+  /// Builds a dropdown menu to select the aspect of the area.
+  Widget _buildAspect(BuildContext context) {
+
+
+
+    final aspectData              = Provider.of<Area>(context)                    ;
+    final unsavedChangesNotifier  = Provider.of<UnsavedChangesNotifier>(context)  ;
+    print("***");
+    print("***");
+    print("inside aspectData");
+    print("File Path: ${aspectData.photoFilePath}");
+    print("***");
+    print("***");
+    print("***");       
+
+    return PortraitHandlingSizedBox(
+      widthFactorOnWideDevices: 0.3,
+      child: DropdownOptions (
+        
+        header      : 'Aspect'            ,
+        enumValues  : Direction.values    ,
+        initialValue: aspectData.aspect   ,
+        
+        onSelected  : (selectedOption) {
+          aspectData.aspect = selectedOption;
+          unsavedChangesNotifier.setUnsavedChanges(true);
+        },
+      ),
+    );
+  }
+
+
   /// Builds a text input field to enter the elevation of the area.
   Widget _buildElevation(BuildContext context) {
     final elevationData = Provider.of<Area>(context);
@@ -76,28 +116,10 @@ class SiteCharacteristicsForm extends StatelessWidget {
     );
   }
 
-  /// Builds a dropdown menu to select the aspect of the area.
-  Widget _buildAspect(BuildContext context) {
-    final aspectData = Provider.of<Area>(context);
-    final unsavedChangesNotifier = Provider.of<UnsavedChangesNotifier>(context);
-
-    return PortraitHandlingSizedBox(
-      widthFactorOnWideDevices: 0.3,
-      child: DropdownOptions(
-        header: 'Aspect',
-        enumValues: Direction.values,
-        initialValue: aspectData.aspect,
-        onSelected: (selectedOption) {
-          aspectData.aspect = selectedOption;
-          unsavedChangesNotifier.setUnsavedChanges(true);
-        },
-      ),
-    );
-  }
 
   /// Builds a text input field to enter the slope percentage of the area.
   Widget _buildPercentSlope(BuildContext context) {
-    final percentSlopeData = Provider.of<Area>(context);
+    final percentSlopeData    = Provider.of<Area>(context);
     final unsavedChangesNotifier = Provider.of<UnsavedChangesNotifier>(context);
 
     return PortraitHandlingSizedBox(
@@ -120,6 +142,7 @@ class SiteCharacteristicsForm extends StatelessWidget {
     );
   }
 
+
   /// Builds radio options to select the slope position of the area.
   Widget _buildSlopePosition(BuildContext context) {
     final slopePositionData = Provider.of<Area>(context);
@@ -134,6 +157,7 @@ class SiteCharacteristicsForm extends StatelessWidget {
           unsavedChangesNotifier.setUnsavedChanges(true);
         });
   }
+
 
   /// Builds a text input field to enter soil information of the area.
   Widget _buildSoilInformation(BuildContext context) {

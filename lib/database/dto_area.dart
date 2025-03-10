@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, prefer_adjacent_string_concatenation
 
+import 'dart:io';
+
 import 'package:forestryapp/enums/cover_type.dart';
 import 'package:forestryapp/enums/direction.dart';
 import 'package:forestryapp/enums/hawksworth.dart';
@@ -22,6 +24,12 @@ class DTOArea {
   late String name;
   double? acres;
   String? goals;
+  
+  // photos screen
+  String?   photoName               ;
+  String?   photoDescription        ;
+  String?   photoFilePath           ;  
+
   int? elevation;
   late Direction direction;
   int? slopePercentage;

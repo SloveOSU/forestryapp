@@ -7,10 +7,10 @@ import "package:provider/provider.dart";
 /// reviewing by a user.
 class AreaProperties extends StatelessWidget {
   // Static Variables //////////////////////////////////////////////////////////
-  static const _placeholderForOmitted = "N/A";
-  static const _unitElevation = 'ft';
-  static const _unitSlopePercentage = "%";
-  static const _unitSpeciesComposition = "%";
+  static const _placeholderForOmitted   = "N/A"                               ;
+  static const _unitElevation           = 'ft'                                ;
+  static const _unitSlopePercentage     = "%"                                 ;
+  static const _unitSpeciesComposition  = "%"                                 ;
 
   // Instance Variables ////////////////////////////////////////////////////////
   final Area _area;
@@ -32,44 +32,59 @@ class AreaProperties extends StatelessWidget {
         ListTile(
           title: Text(_area.name ?? _placeholderForOmitted,
               style: Theme.of(context).textTheme.headlineLarge),
-          tileColor: _area.name == null ? Theme.of(context).colorScheme.errorContainer : null,
-          subtitle: _area.name == null ? 
-            Text(
-              "Please enter an area name.",
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ) : null,
+          tileColor: _area.name == null
+              ? Theme.of(context).colorScheme.errorContainer
+              : null,
+          subtitle: _area.name == null
+              ? Text(
+                  "Please enter an area name.",
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                )
+              : null,
         ),
         // TODO: make this listenable
         _buildLandowner(
           context,
         ),
         _buildAreaPropertyListTile(
-          context,
-          "Acres",
-          _formatDouble(_area.acres)
-        ),
+            context, "Acres", _formatDouble(_area.acres)),
         _buildAreaPropertyListTile(
           context,
           "Goals and Objectives",
           _area.goals,
         ),
 
-        // Site Characteristics ////////////////////////////////////////////////
+
+
+        // Photos and Files ////////////////////////////////////////////////
         _buildAreaPropertyListTile(
           context,
-          "Elevation",
-          _formatInt(_area.elevation, units: _unitElevation)
+          "Photo Name",
+          _area.photoName,
         ),
+        _buildAreaPropertyListTile(
+          context,
+          "Photo Description",
+          _area.photoDescription,
+        ),
+        _buildAreaPropertyListTile(
+          context,
+          "Photo File Path",
+          _area.photoFilePath.toString(),
+        ),
+
+
+
+        // Site Characteristics ////////////////////////////////////////////////
+        _buildAreaPropertyListTile(context, "Elevation",
+            _formatInt(_area.elevation, units: _unitElevation)),
         _buildAreaPropertyListTile(
           context,
           "Aspect",
           _area.aspect.label,
         ),
-        _buildAreaPropertyListTile(
-          context,
-          "Slope Percentage",
-          _formatInt(_area.slopePercentage, units: _unitSlopePercentage)
-        ),
+        _buildAreaPropertyListTile(context, "Slope Percentage",
+            _formatInt(_area.slopePercentage, units: _unitSlopePercentage)),
         _buildAreaPropertyListTile(
           context,
           "Slope Position",
@@ -98,22 +113,20 @@ class AreaProperties extends StatelessWidget {
           _area.overstoryDensity.label,
         ),
         _buildAreaPropertyListTile(
-          context,
-          "Overstory Species Composition",
-          _formatInt(_area.overstorySpeciesComposition,
-              units: _unitSpeciesComposition)
-        ),
+            context,
+            "Overstory Species Composition",
+            _formatInt(_area.overstorySpeciesComposition,
+                units: _unitSpeciesComposition)),
         _buildAreaPropertyListTile(
           context,
           "Understory Stand Density",
           _area.understoryDensity.label,
         ),
         _buildAreaPropertyListTile(
-          context,
-          "Understory Species Composition",
-          _formatInt(_area.understorySpeciesComposition,
-              units: _unitSpeciesComposition)
-        ),
+            context,
+            "Understory Species Composition",
+            _formatInt(_area.understorySpeciesComposition,
+                units: _unitSpeciesComposition)),
         _buildAreaPropertyListTile(
           context,
           "Stand History",
@@ -180,8 +193,9 @@ class AreaProperties extends StatelessWidget {
     // Validation error: No landowner selected
     if (_area.landownerID != null) {
       return _buildAreaPropertyListTile(context, "Landowner", landowner?.name);
-    }    
-    return _buildAreaPropertyListTile(context, "Landowner", landowner?.name, "Please select a Landowner.");
+    }
+    return _buildAreaPropertyListTile(
+        context, "Landowner", landowner?.name, "Please select a Landowner.");
   }
 
   String? _formatInt(int? value, {String? units}) =>
@@ -200,21 +214,20 @@ class AreaProperties extends StatelessWidget {
     return "$value$unitSuffix";
   }
 
-  /// To display a validation error under the property, 
+  /// To display a validation error under the property,
   /// add the optional String parameter errorMessage.
   Widget _buildAreaPropertyListTile(
-    BuildContext context,
-    String propertyLabel,
-    String? property,
-    [String? errorMessage]
-  ) {
+      BuildContext context, String propertyLabel, String? property,
+      [String? errorMessage]) {
     final TextStyle? styleProperty = Theme.of(context).textTheme.headlineSmall;
     final TextStyle styleLabel =
         styleProperty!.copyWith(fontWeight: FontWeight.bold);
 
     return ListTile(
       // Use `Wrap` to push property down underneath the label when too long.
-      tileColor: errorMessage != null ? Theme.of(context).colorScheme.errorContainer : null,
+      tileColor: errorMessage != null
+          ? Theme.of(context).colorScheme.errorContainer
+          : null,
       title: Wrap(
         direction: Axis.horizontal,
         alignment: WrapAlignment.start,
@@ -223,11 +236,10 @@ class AreaProperties extends StatelessWidget {
           Text(property ?? _placeholderForOmitted, style: styleProperty),
         ],
       ),
-      subtitle: errorMessage != null ? 
-      Text(
-        errorMessage,
-        style: TextStyle(color: Theme.of(context).colorScheme.error)
-      ) : null,
+      subtitle: errorMessage != null
+          ? Text(errorMessage,
+              style: TextStyle(color: Theme.of(context).colorScheme.error))
+          : null,
     );
   }
 }

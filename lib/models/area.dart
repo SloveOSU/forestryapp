@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import "package:forestryapp/enums/slope_position.dart";
 import "package:forestryapp/enums/direction.dart";
@@ -17,59 +19,77 @@ import 'package:forestryapp/database/dao_area.dart';
 /// invasives, and wildlife; mistletoe presence and its uniformity; as well as free
 /// response fields for road health, water health, fire risk, and other issues.
 class Area extends ChangeNotifier {
+  
+  
+  //
+  //  CONSTRUCTOR
+  //
   /// Create a model of an area.
   ///
-  /// When [id] is left null, it is assumed the the model represents an area
+  /// When [id] is left null, it is assumed that the model represents an area
   /// that is not yet stored in the database.
   Area({
     int? id,
 
     // Basic Information
-    int? landownerID,
+    int?    landownerID,
     String? name,
     double? acres,
     String? goals,
 
+    /*New*/
+    // Photos and Files
+    String?           photoName            ,
+    String?           photoDescription     ,
+    String?           photoFilePath        ,
+    File?             photoFile            ,    // file only used for state purposes
+
+
     // Site Characteristics
-    int? elevation,
-    Direction aspect = Direction.na,
-    int? slopePercentage,
-    SlopePosition slopePosition = SlopePosition.na,
-    String? soilInfo,
+    int?            elevation                           ,
+    Direction       aspect            = Direction.na    ,
+    int?            slopePercentage                     ,
+    SlopePosition   slopePosition     = SlopePosition.na,
+    String?         soilInfo                            ,
 
     // Vegetative Conditions
-    CoverType coverType = CoverType.forest,
-    StandStructure standStructure = StandStructure.na,
-    StandDensity overstoryDensity = StandDensity.na,
-    int? overstorySpeciesComposition,
-    StandDensity understoryDensity = StandDensity.na,
-    int? understorySpeciesComposition,
-    String? standHistory,
+    CoverType       coverType                         = CoverType.forest    ,
+    StandStructure  standStructure                    = StandStructure.na   ,
+    StandDensity    overstoryDensity                  = StandDensity.na     ,
+    int?            overstorySpeciesComposition                             ,
+    StandDensity    understoryDensity                 = StandDensity.na     ,
+    int?            understorySpeciesComposition                            ,
+    String?         standHistory                                            ,
 
     // Damages
-    String? insects,
-    String? diseases,
-    String? invasives,
-    String? wildlifeDamage,
+    String? insects         ,
+    String? diseases        ,
+    String? invasives       ,
+    String? wildlifeDamage  ,
 
     // Mistletoe
-    MistletoeUniformity mistletoeUniformity = MistletoeUniformity.na,
-    String? mistletoeLocation,
-    Hawksworth hawksworth = Hawksworth.na,
-    String? mistletoeTreeSpecies,
+    MistletoeUniformity mistletoeUniformity   = MistletoeUniformity.na  ,
+    String?             mistletoeLocation                               ,
+    Hawksworth          hawksworth            = Hawksworth.na           ,
+    String?             mistletoeTreeSpecies                            ,
 
     // Free responses
-    String? roadHealth,
-    String? waterHealth,
-    String? fireRisk,
-    String? otherIssues,
-    String? diagnosis,
+    String? roadHealth    ,
+    String? waterHealth   ,
+    String? fireRisk      ,
+    String? otherIssues   ,
+    String? diagnosis     ,
   })  : _id = id,
         // Basic Information
         _landownerID = landownerID,
         _name = name,
         _acres = acres,
         _goals = goals,
+
+        // photos screen        
+        _photoName          =          photoName            ,
+        _photoDescription   =          photoDescription     ,
+        _photoFilePath      =          photoFilePath        ,        
 
         // Site Characteristics
         _elevation = elevation,
@@ -106,83 +126,121 @@ class Area extends ChangeNotifier {
         _otherIssues = otherIssues,
         _diagnosis = diagnosis;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /// Named constructor to convert a database record (which is in the form of a
-  /// [Map]) to an instance of of the model class.
+  /// [Map]) to an instance of the model class.
   Area.fromMap(Map dbRecord)
       : this(
             id: dbRecord[DAOArea.colID],
 
             // Basic Information
-            landownerID: dbRecord[DAOArea.colLandownerID],
-            name: dbRecord[DAOArea.colName],
-            acres: dbRecord[DAOArea.colAcres],
-            goals: dbRecord[DAOArea.colGoals],
+            landownerID     : dbRecord[DAOArea.colLandownerID]    ,
+            name            : dbRecord[DAOArea.colName]           ,
+            acres           : dbRecord[DAOArea.colAcres]          ,
+            goals           : dbRecord[DAOArea.colGoals]          ,
+
+
+            /**
+             * TODO: Photos and Files
+             */
+            photoName            : dbRecord[DAOArea.colPhotoName]           ,
+            photoDescription     : dbRecord[DAOArea.colPhotoDescription]    ,
+            photoFilePath        : dbRecord[DAOArea.colPhotoFilePath]       ,
+
+
 
             // Site Characteristics
-            elevation: dbRecord[DAOArea.colElevation],
-            aspect: _convertDBToEnum(
-                dbRecord[DAOArea.colAspect], Direction.values, Direction.na),
-            slopePercentage: dbRecord[DAOArea.colSlopePercentage],
-            slopePosition: _convertDBToEnum(
-              dbRecord[DAOArea.colSlopePosition],
-              SlopePosition.values,
-              SlopePosition.na,
+            elevation       : dbRecord[DAOArea.colElevation],
+            aspect          : _convertDBToEnum(
+                dbRecord[DAOArea.colAspect]       ,
+                Direction.values                  ,
+                Direction.na)                     ,                
+            slopePercentage : dbRecord[DAOArea.colSlopePercentage],
+            slopePosition   : _convertDBToEnum(
+              dbRecord[DAOArea.colSlopePosition]  ,
+              SlopePosition.values                ,
+              SlopePosition.na                    ,
             ),
-            soilInfo: dbRecord[DAOArea.colSoilInfo],
+            soilInfo        : dbRecord[DAOArea.colSoilInfo],
 
             // Vegetative Conditions
-            coverType: _convertDBToEnum(
-              dbRecord[DAOArea.colCoverType],
-              CoverType.values,
-              CoverType.na,
+            coverType       : _convertDBToEnum(
+              dbRecord[DAOArea.colCoverType]  ,
+              CoverType.values                ,
+              CoverType.na                    ,
             ),
-            standStructure: _convertDBToEnum(
-              dbRecord[DAOArea.colStandStructure],
-              StandStructure.values,
-              StandStructure.na,
+            standStructure  : _convertDBToEnum(
+              dbRecord[DAOArea.colStandStructure] ,
+              StandStructure.values               ,
+              StandStructure.na                   ,
             ),
             overstoryDensity: _convertDBToEnum(
-              dbRecord[DAOArea.colOverstoryDensity],
-              StandDensity.values,
-              StandDensity.na,
+              dbRecord[DAOArea.colOverstoryDensity] ,
+              StandDensity.values                   ,
+              StandDensity.na                       ,
             ),
-            overstorySpeciesComposition:
-                dbRecord[DAOArea.colOverstorySpeciesComposition],
-            understoryDensity: _convertDBToEnum(
-              dbRecord[DAOArea.colUnderstoryDensity],
-              StandDensity.values,
-              StandDensity.na,
+            overstorySpeciesComposition : dbRecord[DAOArea.colOverstorySpeciesComposition],
+            understoryDensity           : _convertDBToEnum(
+              dbRecord[DAOArea.colUnderstoryDensity]  ,
+              StandDensity.values                     ,
+              StandDensity.na                         ,
             ),
-            understorySpeciesComposition:
-                dbRecord[DAOArea.colUnderstorySpeciesComposition],
-            standHistory: dbRecord[DAOArea.colStandHistory],
+            understorySpeciesComposition  : dbRecord[DAOArea.colUnderstorySpeciesComposition] ,
+            standHistory                  : dbRecord[DAOArea.colStandHistory]                 ,
 
             // Damages
-            insects: dbRecord[DAOArea.colInsects],
-            diseases: dbRecord[DAOArea.colDiseases],
-            invasives: dbRecord[DAOArea.colInvasives],
-            wildlifeDamage: dbRecord[DAOArea.colWildlifeDamage],
+            insects         : dbRecord[DAOArea.colInsects]          ,
+            diseases        : dbRecord[DAOArea.colDiseases]         ,
+            invasives       : dbRecord[DAOArea.colInvasives]        ,
+            wildlifeDamage  : dbRecord[DAOArea.colWildlifeDamage]   ,
 
             // Mistletoe
             mistletoeUniformity: _convertDBToEnum(
-              dbRecord[DAOArea.colMistletoeUniformity],
-              MistletoeUniformity.values,
-              MistletoeUniformity.na,
+              dbRecord[DAOArea.colMistletoeUniformity]  ,
+              MistletoeUniformity.values                ,
+              MistletoeUniformity.na                    ,
             ),
-            mistletoeLocation: dbRecord[DAOArea.colMistletoeLocation],
-            hawksworth: _convertDBToEnum(
-              dbRecord[DAOArea.colHawksworth],
-              Hawksworth.values,
-              Hawksworth.na,
+            mistletoeLocation     : dbRecord[DAOArea.colMistletoeLocation]  ,
+            hawksworth            : _convertDBToEnum(
+              dbRecord[DAOArea.colHawksworth] ,
+              Hawksworth.values               ,
+              Hawksworth.na                   ,
             ),
-            mistletoeTreeSpecies: dbRecord[DAOArea.colMistletoeTreeSpecies],
+
+            mistletoeTreeSpecies  : dbRecord[DAOArea.colMistletoeTreeSpecies],
 
             // Free responses
-            roadHealth: dbRecord[DAOArea.colRoadHealth],
-            waterHealth: dbRecord[DAOArea.colWaterHealth],
-            fireRisk: dbRecord[DAOArea.colFireRisk],
-            otherIssues: dbRecord[DAOArea.colOtherIssues],
-            diagnosis: dbRecord[DAOArea.colDiagnosis]);
+            roadHealth    : dbRecord[DAOArea.colRoadHealth]     ,
+            waterHealth   : dbRecord[DAOArea.colWaterHealth]    ,
+            fireRisk      : dbRecord[DAOArea.colFireRisk]       ,
+            otherIssues   : dbRecord[DAOArea.colOtherIssues]    ,
+            diagnosis     : dbRecord[DAOArea.colDiagnosis])     ;
+
+
+
+
+
+
+
+
+
+
+
+
 
   /// Gets appropriate enum for a given database column.
   ///
@@ -200,6 +258,16 @@ class Area extends ChangeNotifier {
     return na;
   }
 
+
+
+
+
+
+
+
+  //
+  //  Instance variables
+  //
   // Instance Variables ////////////////////////////////////////////////////////
   int? _id;
 
@@ -210,6 +278,12 @@ class Area extends ChangeNotifier {
   String? _name;
   double? _acres;
   String? _goals;
+
+  // Photos and Files -- created below
+  // String?  _photoName;
+  // String?  _photoDescription;
+  // File?    _photoFilePath;
+
 
   // Site Characteristics
   int? _elevation;
@@ -245,6 +319,71 @@ class Area extends ChangeNotifier {
   String? _fireRisk;
   String? _otherIssues;
   String? _diagnosis;
+
+
+
+
+  ///////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////
+  // test space for Photos and Files START
+  //
+
+
+
+  // create variable  
+  String? _photoName        = "Test Photo Title Variable"         ;
+  String? _photoDescription = "Test Photo Description Variable"   ;
+  String?   _photoFilePath    = null                                ;
+  File?   _photoFile    = null                                ;
+
+  // get variable
+  String? get photoDescription => _photoDescription;
+  // set variable
+  set photoDescription(String? value) {
+    _photoDescription = value;
+    notifyListeners();
+  }
+  
+  // get variable
+  String? get photoName => _photoName;
+  // set variable
+  set photoName(String? value) {
+    _photoName = value;
+    notifyListeners();
+  }
+
+  // get variable
+  String? get photoFilePath => _photoFilePath;
+  // set variable
+  set photoFilePath(String? value) {
+    _photoFilePath = value;
+    notifyListeners();
+  }
+
+
+  // get variable
+  File? get photoFile => _photoFile;
+  // set variable
+  set photoFile(File? value) {
+    _photoFile = value;
+    notifyListeners();
+  }
+
+
+  //
+  // test space for Photos and Files END
+  ///////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
 
   // Getters and Setters ///////////////////////////////////////////////////////
 
@@ -458,15 +597,25 @@ class Area extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
+
+
+
+
+
+
   // Methods For Preparing For Area For Use In Form ////////////////////////////
   // Don't use above individual setters because it would be wasteful to call
   // notify listeners repeatedly when we really only need to call it once.
-
   void clearForNewForm() {
     _id = null;
 
     // Individual Form Screens
     _setBasicInfo();
+    // Photos and Files
+    _setPhotosFiles();
+
     _setSiteCharacteristics();
     _setVegetativeConditions();
     _setDamages();
@@ -476,6 +625,18 @@ class Area extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
   void setFromOther(Area that) {
     _id = that.id;
 
@@ -484,6 +645,12 @@ class Area extends ChangeNotifier {
       name: that._name,
       acres: that._acres,
       goals: that._goals,
+    );
+
+    _setPhotosFiles(
+      photoName: that._photoName,
+      photoDescription: that._photoDescription,
+      photoFilePath: that._photoFilePath,      
     );
 
     _setSiteCharacteristics(
@@ -529,26 +696,46 @@ class Area extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setBasicInfo(
-      {int? landownerID, String? name, double? acres, String? goals}) {
-    _landownerID = landownerID;
-    _name = name;
-    _acres = acres;
-    _goals = goals;
+
+  void _setBasicInfo({
+      int?    landownerID ,
+      String? name        ,
+      double? acres       ,
+      String? goals
+    }) {
+    _landownerID  = landownerID ;
+    _name         = name        ;
+    _acres        = acres       ;
+    _goals        = goals       ;
   }
 
+
+
+  // Photos and Files
+  void _setPhotosFiles({
+      String? photoName         ,
+      String? photoDescription  ,
+      String?   photoFilePath     ,
+    }) {
+    _photoName          = photoName         ;
+    _photoDescription   = photoDescription  ;
+    _photoFilePath      = photoFilePath     ;
+  }
+
+
+
   void _setSiteCharacteristics({
-    int? elevation,
-    Direction aspect = Direction.na,
-    int? slopePercentage,
-    SlopePosition slopePosition = SlopePosition.na,
-    String? soilInfo,
+    int?          elevation                           ,
+    Direction     aspect            = Direction.na    ,
+    int?          slopePercentage                     ,
+    SlopePosition slopePosition     = SlopePosition.na,
+    String?       soilInfo                            ,
   }) {
-    _elevation = elevation;
-    _aspect = aspect;
-    _slopePercentage = slopePercentage;
-    _slopePosition = slopePosition;
-    _soilInfo = soilInfo;
+    _elevation        = elevation       ;
+    _aspect           = aspect          ;
+    _slopePercentage  = slopePercentage ;
+    _slopePosition    = slopePosition   ;
+    _soilInfo         = soilInfo        ;
   }
 
   void _setVegetativeConditions({
@@ -587,10 +774,10 @@ class Area extends ChangeNotifier {
     Hawksworth hawksworth = Hawksworth.na,
     String? mistletoeTreeSpecies,
   }) {
-    _mistletoeUniformity = mistletoeUniformity;
-    _mistletoeLocation = mistletoeLocation;
-    _hawksworth = hawksworth;
-    _mistletoeTreeSpecies = mistletoeTreeSpecies;
+    _mistletoeUniformity    = mistletoeUniformity;
+    _mistletoeLocation      = mistletoeLocation;
+    _hawksworth             = hawksworth;
+    _mistletoeTreeSpecies   = mistletoeTreeSpecies;
   }
 
   void _setFreeResponses({
@@ -600,12 +787,22 @@ class Area extends ChangeNotifier {
     String? otherIssues,
     String? diagnosis,
   }) {
-    _roadHealth = roadHealth;
-    _waterHealth = waterHealth;
-    _fireRisk = fireRisk;
-    _otherIssues = otherIssues;
-    _diagnosis = diagnosis;
+    _roadHealth     = roadHealth    ;
+    _waterHealth    = waterHealth   ;
+    _fireRisk       = fireRisk      ;
+    _otherIssues    = otherIssues   ;
+    _diagnosis      = diagnosis     ;
   }
+
+
+
+
+
+
+
+
+
+
 
   // Debugging Helpers /////////////////////////////////////////////////////////
   @override
@@ -617,6 +814,12 @@ class Area extends ChangeNotifier {
         "\n_name: $_name" +
         "\n_acres: $_acres" +
         "\n_goals: $_goals" +
+
+        // Photos and Files
+        "\n_photoName: $_photoName" +
+        "\n_photoDescription: $_photoDescription" +
+        "\n_photoFilePath: $_photoFilePath" +
+
 
         // Site Characteristics
         "\n_elevation: $_elevation" +

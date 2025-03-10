@@ -8,75 +8,107 @@ class DAOArea {
   static const colID = 'id';
 
   // Basic Information
-  static const colLandownerID = 'landowner_id';
-  static const colName = 'name';
-  static const colAcres = 'acres';
-  static const colGoals = 'goals';
+  static const colLandownerID                   = 'landowner_id'                    ;
+  static const colName                          = 'name'                            ;
+  static const colAcres                         = 'acres'                           ;
+  static const colGoals                         = 'goals'                           ;
+
+  // Photos and Files
+  static const colPhotoName                     = 'photo_name'                      ;
+  static const colPhotoDescription              = 'photo_description'               ;
+  static const colPhotoFilePath                 = 'photo_file_path'                 ;
 
   // Site Characteristics
-  static const colElevation = 'elevation';
-  static const colAspect = 'aspect';
-  static const colSlopePercentage = 'slope_percentage';
-  static const colSlopePosition = 'slope_position';
-  static const colSoilInfo = 'soil_information';
+  static const colElevation                     = 'elevation'                       ;
+  static const colAspect                        = 'aspect'                          ;
+  static const colSlopePercentage               = 'slope_percentage'                ;
+  static const colSlopePosition                 = 'slope_position'                  ;
+  static const colSoilInfo                      = 'soil_information'                ;
 
   // Vegetative Conditions
-  static const colCoverType = 'cover_type';
-  static const colStandStructure = 'stand_structure';
-  static const colOverstoryDensity = 'overstory_stand_density';
-  static const colOverstorySpeciesComposition = 'overstory_species_composition';
-  static const colUnderstoryDensity = 'understory_stand_density';
-  static const colUnderstorySpeciesComposition =
-      'understory_species_composition';
-  static const colStandHistory = 'history';
+  static const colCoverType                     = 'cover_type'                      ;
+  static const colStandStructure                = 'stand_structure'                 ;
+  static const colOverstoryDensity              = 'overstory_stand_density'         ;
+  static const colOverstorySpeciesComposition   = 'overstory_species_composition'   ;
+  static const colUnderstoryDensity             = 'understory_stand_density'        ;
+  static const colUnderstorySpeciesComposition  = 'understory_species_composition'  ;
+  static const colStandHistory                  = 'history'                         ;
 
   // Damages
-  static const colInsects = 'insects';
-  static const colDiseases = 'diseases';
-  static const colInvasives = 'invasives';
-  static const colWildlifeDamage = 'wildlife_damage';
+  static const colInsects                       = 'insects'                         ;
+  static const colDiseases                      = 'diseases'                        ;
+  static const colInvasives                     = 'invasives'                       ;
+  static const colWildlifeDamage                = 'wildlife_damage'                 ;
 
   // Mistletoe
-  static const colMistletoeUniformity = 'mistletoe_uniformity';
-  static const colMistletoeLocation = 'mistletoe_location';
-  static const colHawksworth = 'hawksworth';
-  static const colMistletoeTreeSpecies = 'mistletoe_tree_species';
+  static const colMistletoeUniformity           = 'mistletoe_uniformity'            ;
+  static const colMistletoeLocation             = 'mistletoe_location'              ;
+  static const colHawksworth                    = 'hawksworth'                      ;
+  static const colMistletoeTreeSpecies          = 'mistletoe_tree_species'          ;
 
   // Free responses
-  static const colRoadHealth = 'road_issues';
-  static const colWaterHealth = 'water_issues';
-  static const colFireRisk = 'fire_risk';
-  static const colOtherIssues = 'other_issues';
-  static const colDiagnosis = 'diagnosis';
+  static const colRoadHealth                    = 'road_issues'                     ;
+  static const colWaterHealth                   = 'water_issues'                    ;
+  static const colFireRisk                      = 'fire_risk'                       ;
+  static const colOtherIssues                   = 'other_issues'                    ;
+  static const colDiagnosis                     = 'diagnosis'                       ;
 
-  // Reading from database /////////////////////////////////////////////////////
-  static Future<List<Area>> fetchFromDatabase() async {
-    final dbRecords = await DatabaseManager.getInstance().readArea();
-    return dbRecords.map((Map record) => Area.fromMap(record)).toList();
+  /// Reading from database /////////////////////////////////////////////////////
+  static Future<List<Area>> fetchFromDatabase() async {   
+    
+    // selects all areas from database and then 
+    // stores all areas into a list of <Map <String, dynamic>> 
+    // and then is stored into dbRecords
+    final dbRecords = await DatabaseManager
+      .getInstance()
+      .readArea();
+    
+    // 
+    return dbRecords.map(
+      (Map record) => Area.fromMap(record))
+      .toList();
   }
 
-  // Writing to Database ///////////////////////////////////////////////////////
+
+  /// Writing to Database ///////////////////////////////////////////////////////
   static Future<int> saveNewArea(Area area) async {
-    return await DatabaseManager.getInstance()
-        .saveNewArea(_getNonIDFields(area));
+    return await DatabaseManager
+      .getInstance()
+      .saveNewArea(_getNonIDFields(area));
   }
 
-  /// Edit an existing area record alreay on the database.
+
+  /// Edit an existing area record already on the database.
   ///
   /// Assumes [area.id] is a valid ID for an existing area.
-  static Future<int> updateExistingArea(Area area) async =>
-      await DatabaseManager.getInstance()
-          .updateExistingArea([..._getNonIDFields(area), area.id]);
+  static Future<int> updateExistingArea(Area area) async => await DatabaseManager
+        .getInstance()
+        .updateExistingArea([..._getNonIDFields(area), area.id]);
+
 
   /// Remove an existing area record from the database.
   ///
   /// Assumes [id] is a valid ID of an existing area record.
-  static Future<int> deleteArea(int id) async =>
-      await DatabaseManager.getInstance().deleteArea([id]);
+  static Future<int> deleteArea(int id) async => await DatabaseManager
+        .getInstance()
+        .deleteArea([id]);
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Relationship Queries //////////////////////////////////////////////////////
   static Future<List<Area>> readAreasFromLandowner(int landownerID) async {
-    final dbRecords = await DatabaseManager.getInstance()
+    final dbRecords = await DatabaseManager
+        .getInstance()
         .readAreasFromLandowner([landownerID]);
 
     if (dbRecords.isEmpty) return <Area>[];
@@ -84,13 +116,19 @@ class DAOArea {
     return dbRecords.map((Map record) => Area.fromMap(record)).toList();
   }
 
-  // Helpers ///////////////////////////////////////////////////////////////////
 
+  // Helpers ///////////////////////////////////////////////////////////////////
   static List<dynamic> _getNonIDFields(Area area) => [
         (area.landownerID),
         area.name,
         area.acres,
         area.goals,
+        
+        // photos screen
+        area.photoName                        ,
+        area.photoDescription                 ,
+        area.photoFilePath                    ,  // cast file type into string for storage
+
         area.elevation,
         prepareEnumForDBWrite(area.aspect),
         area.slopePercentage,
@@ -118,8 +156,7 @@ class DAOArea {
         area.diagnosis
       ];
 
-  static String? prepareEnumForDBWrite(dynamic enumValue,
-      {String naLabel = 'N/A'}) {
+  static String? prepareEnumForDBWrite(dynamic enumValue, {String naLabel = 'N/A'}) {
     if (enumValue.label == naLabel) return null;
     return enumValue.label;
   }

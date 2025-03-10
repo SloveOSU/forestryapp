@@ -7,10 +7,13 @@ import 'package:forestryapp/models/landowner_collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "forestryapp.dart";
 import 'package:forestryapp/database/database_manager.dart';
+// needed for database reinstantiate
+import 'package:sqflite/sqflite.dart' as sqflite;
 
 // Winter 2025 commits begin
 // creating new branch feature-gallery
 // commit #1 - added changes to gradle, kotlin, and pubspec
+// commit #2 - adding screen
 
 void main() async {
   // Need `ensureInitialized()` when main is `async` because the we are waiting
@@ -18,6 +21,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await DatabaseManager.initialize();
+
+
+  // modify this variable to reinstantiate the flutter database
+  // this is needed if the DDL or DML is altered in a structural way
+  // run twice after delete
+  bool reinstatiateDatabase = false;
+  // ignore: dead_code
+  if(reinstatiateDatabase) {
+    await sqflite.deleteDatabase('forestryapp.db');  
+  }  
 
   runApp(
     ForestryApp(
